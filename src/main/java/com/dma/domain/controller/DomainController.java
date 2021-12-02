@@ -1,30 +1,33 @@
 package com.dma.domain.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.dma.domain.dto.DomainRequestDTO;
+import com.dma.domain.service.DomainService;
 
 @RestController()
 public class DomainController {
 
+	@Autowired
+	DomainService domainService;
+	
 	@GetMapping("/healthCheck")
 	public String healthCheck() {
-		return "{version: 1.0.0, status: 'OK' }";
-	}
-	
-	@PostMapping("/process-domain")
-	public String processDomain() {
-		return "processed";
+		return domainService.healthCheck();
 	}
 	
 	@PostMapping("/process-client-domain")
-	public String processClientDomain() {
-		return "processed client domain";
+	public String processClientDomain(@RequestBody DomainRequestDTO domainRequestDTO) {
+		return domainService.processClientDomain(domainRequestDTO);
 	}
 	
-	@GetMapping("/validate-domain")
-	public String validateDomain() {
-		return "{dominio:\"bancolombia.com\", dominios_similares:[], dominios_sim_punycode:[]}";
+	@PostMapping("/validate-domain")
+	public String validateDomain(@RequestBody DomainRequestDTO domainRequestDTO) {
+		return domainService.validateDomain(domainRequestDTO);
 	}
 
 }
